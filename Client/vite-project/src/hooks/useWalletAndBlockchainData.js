@@ -5,7 +5,8 @@ const useWalletAndBlockchainData = () => {
   const [frontend, setFrontend] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [chainInfo, setChainInfo] = useState(null);
-  const [latestBlocks, setLatestBlocks] = useState([]);
+  const [latestBlock, setLatestBlock] = useState(null);
+  const [recentBlocks, setRecentBlocks] = useState([]);
   const [latestTransactions, setLatestTransactions] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -27,9 +28,11 @@ const useWalletAndBlockchainData = () => {
   }, []);
 
   useEffect(() => {
+    if (!frontend) return;
+
     const interval = setInterval(
       () => frontend && updateDashboard(frontend),
-      10000
+      60000
     );
     return () => clearInterval(interval);
   }, [frontend]);
@@ -38,7 +41,8 @@ const useWalletAndBlockchainData = () => {
     try {
       const info = await frontendInstance.getChainInfo();
       setChainInfo(info);
-      setLatestBlocks(await frontendInstance.getLatestBlocks(5));
+      setLatestBlock(await frontendInstance.getLatestBlock());
+      setRecentBlocks(await frontendInstance.getRecentBlocks());
       setLatestTransactions(await frontendInstance.getLatestTransactions(5));
     } catch (error) {
       console.error("Error updating dashboard:", error);
@@ -64,7 +68,8 @@ const useWalletAndBlockchainData = () => {
   return {
     isInitialized,
     chainInfo,
-    latestBlocks,
+    latestBlock,
+    recentBlocks,
     latestTransactions,
     message,
     createTransaction,

@@ -92,10 +92,65 @@ app.get("/", (req, res) => {
   res.send("Bitcoin-like Server");
 });
 
+app.get("/api/blocks", (req, res) => {
+  res.json(mainChain.chain);
+});
+
+// Get a specific block by index
+app.get("/api/blocks/:index", (req, res) => {
+  const blockIndex = parseInt(req.params.index);
+  if (blockIndex < 0 || blockIndex >= mainChain.chain.length) {
+    return res.status(404).json({ error: "Block not found" });
+  }
+  res.json(mainChain.chain[blockIndex]);
+});
+// Get the latest block
+app.get("/api/latest-block", (req, res) => {
+  res.json(mainChain.getLatestBlock());
+});
+//to be changed
+app.get("/api/last-n-blocks", (req, res) => {
+  res.json(mainChain.getLastNBlocks(5));
+});
+// Validate the blockchain
+app.get("/api/validate-chain", (req, res) => {
+  const isValid = mainChain.isChainValid();
+  res.json({ isValid });
+});
+// 2. Transaction Pool Visualizer API
+
+app.get("/api/transaction-pool", (req, res) => {
+  res.json(mainChain.transactionPool);
+});
+
+// Search functionality (basic implementation)
+app.get("/api/search", (req, res) => {
+  const { query } = req.query;
+
+  // Search in blocks
+  const block = mainChain.chain.find((b) => b.hash === query);
+  if (block) return res.json({ type: "block", data: block });
+
+  // Search in transactions (including those in blocks and in the pool)
+  const poolTransaction = mainChain.transactionPool.find(
+    (t) => t.fromAddress === query || t.toAddress === query
+  );
+  if (poolTransaction)
+    return res.json({ type: "transaction", data: poolTransaction });
+
+  const blockTransaction = mainChain.chain
+    .flatMap((b) => b.transactions)
+    .find((t) => t.fromAddress === query || t.toAddress === query);
+  if (blockTransaction)
+    return res.json({ type: "transaction", data: blockTransaction });
+
+  res.status(404).json({ error: "Not found" });
+});
+
 app.get("/chain-info", (req, res) => {
   res.send({
     totalBlocks: mainChain?.chain?.length,
-    totalTransactions: 10,
+    totalTransactions: mainChain.totalTransactions,
     currentDifficulty: mainChain.difficulty,
   });
 });
@@ -109,7 +164,7 @@ app.post("/transaction", (req, res) => {
   try {
     const transaction = new Transaction(fromAddress, toAddress, amount);
     mainChain.addTransaction(transaction, true);
-    console.log("trying to broadcast new transaction for miners to mine ");
+    console.log("Broadcasting new transaction to miners");
 
     broadcastToMiners(
       JSON.stringify({
@@ -117,7 +172,7 @@ app.post("/transaction", (req, res) => {
         transaction,
       })
     );
-    res.json({ message: "Transaction added successfully." });
+    res.json({ message: "Transaction added to pool  successfully." });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -84,21 +84,42 @@ function handleIncomingMessage(message) {
 
 function startMining() {
   setInterval(() => {
-    if (myCoin.pendingTransactions.length > 0) {
+    if (myCoin.transactionPool.length >= myCoin.transactionsPerBlock) {
       console.log("Mining new block...");
-      myCoin.minePendingTransactions(minerAddress);
-      const latestBlock = myCoin.getLatestBlock();
-      if (isConnected) {
-        ws.send(JSON.stringify({ type: "NEW_BLOCK", block: latestBlock }));
-        console.log("Mined and broadcasted new block:", latestBlock);
+      const minedBlock = myCoin.minePendingTransactions(minerAddress);
+      if (minedBlock && isConnected) {
+        ws.send(JSON.stringify({ type: "NEW_BLOCK", block: minedBlock }));
+        console.log("Mined and broadcasted new block:", minedBlock);
+      } else if (!minedBlock) {
+        console.log("Failed to mine block");
       } else {
         console.log("Cannot broadcast block - not connected to server");
       }
     } else {
-      console.log("No pending transactions to mine");
+      console.log(
+        `Waiting for more transactions. Current pool size: ${myCoin.transactionPool.length}`
+      );
     }
   }, MINING_INTERVAL);
 }
+
+// function startMining() {
+//   setInterval(() => {
+//     if (myCoin.pendingTransactions.length > 0) {
+//       console.log("Mining new block...");
+//       myCoin.y(minerAddress);
+//       const latestBlock = myCoin.getLatestBlock();
+//       if (isConnected) {
+//         ws.send(JSON.stringify({ type: "NEW_BLOCK", block: latestBlock }));
+//         console.log("Mined and broadcasted new block:", latestBlock);
+//       } else {
+//         console.log("Cannot broadcast block - not connected to server");
+//       }
+//     } else {
+//       console.log("No pending transactions to mine");
+//     }
+//   }, MINING_INTERVAL);
+// }
 
 connectToServer();
 startMining();

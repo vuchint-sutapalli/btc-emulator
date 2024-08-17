@@ -12,7 +12,8 @@ import {
 
 const BlockchainDashboard = ({
   chainInfo,
-  latestBlocks,
+  latestBlock,
+  recentBlocks,
   latestTransactions,
   isLoading,
 }) => {
@@ -27,11 +28,22 @@ const BlockchainDashboard = ({
       </div>
     );
   }
+  let blockSizeData = [];
 
-  const blockSizeData = latestBlocks.map((block) => ({
-    blockNumber: block.index,
-    size: block.transactions.length,
-  }));
+  if (latestBlock) {
+    blockSizeData = [
+      {
+        blockNumber: latestBlock.index,
+        size: latestBlock?.transactions?.length,
+      },
+    ];
+    if (recentBlocks && recentBlocks.length) {
+      blockSizeData = recentBlocks.map((block) => ({
+        blockNumber: block.index,
+        size: block?.transactions?.length,
+      }));
+    }
+  }
 
   return (
     <div>
@@ -61,21 +73,27 @@ const BlockchainDashboard = ({
                 <th className="px-4 py-2">Timestamp</th>
               </tr>
             </thead>
+
             <tbody>
-              {latestBlocks.map((block) => (
-                <tr key={block.index}>
-                  <td className="border px-4 py-2">{block.index}</td>
-                  <td className="border px-4 py-2">
-                    {block.hash.substring(0, 10)}...
-                  </td>
-                  <td className="border px-4 py-2">
-                    {block.transactions.length}
-                  </td>
-                  <td className="border px-4 py-2">
-                    {new Date(block.timestamp).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
+              {recentBlocks.map((block) => {
+                if (!block) {
+                  return null;
+                }
+                return (
+                  <tr key={block.index}>
+                    <td className="border px-4 py-2">{block.index}</td>
+                    <td className="border px-4 py-2">
+                      {block.hash.substring(0, 10)}...
+                    </td>
+                    <td className="border px-4 py-2">
+                      {block.transactions.length}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {new Date(block.timestamp).toLocaleString()}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

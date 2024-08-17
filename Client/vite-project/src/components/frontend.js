@@ -68,10 +68,19 @@ export class Frontend {
     return await response.json();
   }
 
-  async getLatestBlocks(count) {
-    const response = await fetch(
-      `${this.serverUrl}/latest-blocks?count=${count}`
-    );
+  async getLatestBlock() {
+    // let fetchUrl = `${this.serverUrl}/latest-blocks?count=${count}`;
+    let fetchUrl = `${this.serverUrl}/api/latest-block`;
+    const response = await fetch(fetchUrl);
+    if (!response.ok) {
+      throw new Error("Failed to fetch latest blocks");
+    }
+    return await response.json();
+  }
+  async getRecentBlocks() {
+    // let fetchUrl = `${this.serverUrl}/latest-blocks?count=${count}`;
+    let fetchUrl = `${this.serverUrl}/api/last-n-blocks`;
+    const response = await fetch(fetchUrl);
     if (!response.ok) {
       throw new Error("Failed to fetch latest blocks");
     }
@@ -79,6 +88,7 @@ export class Frontend {
   }
 
   async getLatestTransactions(count) {
+    return [];
     const response = await fetch(
       `${this.serverUrl}/latest-transactions?count=${count}`
     );

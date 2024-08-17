@@ -7,7 +7,8 @@ const WalletAndDashboard = () => {
   const {
     isInitialized,
     chainInfo,
-    latestBlocks,
+    latestBlock,
+    recentBlocks,
     latestTransactions,
     message,
     createTransaction,
@@ -89,7 +90,8 @@ const WalletAndDashboard = () => {
         <div>
           <BlockchainDashboard
             chainInfo={chainInfo}
-            latestBlocks={latestBlocks}
+            latestBlock={latestBlock}
+            recentBlocks={recentBlocks}
             latestTransactions={latestTransactions}
             isLoading={!isInitialized}
           />

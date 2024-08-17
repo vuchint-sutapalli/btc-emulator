@@ -52,6 +52,8 @@ class Blockchain {
     this.difficulty = 5;
     this.pendingTransactions = [];
     this.totalTransactions = 0;
+    this.transactionPool = [];
+    this.transactionsPerBlock = 5;
   }
 
   // Create the genesis block
@@ -68,25 +70,37 @@ class Blockchain {
     return this.chain[this.chain.length - 1];
   }
 
+  getLastNBlocks(n) {
+    return this.chain.slice(0 - Number(n));
+  }
   // Mine all pending transactions and reward the miner
   minePendingTransactions(miningRewardAddress) {
+    if (this.transactionPool.length < this.transactionsPerBlock) {
+      console.log("Not enough transactions in the pool to mine a block");
+      return null;
+    }
+
     const rewardTx = new Transaction(null, miningRewardAddress, MINING_REWARD);
+    const transactionsToMine = this.getTransactionsForNextBlock();
     this.pendingTransactions.push(rewardTx);
+    transactionsToMine.push(rewardTx);
 
     const newBlock = new Block(
       this.chain.length,
       Date.now(),
-      this.pendingTransactions,
+      transactionsToMine,
       this.getLatestBlock().hash
     );
     newBlock.mineBlock(this.difficulty);
 
     console.log(`Block successfully mined!`);
     this.chain.push(newBlock);
-    this.totalTransactions =
-      this.totalTransactions + this.pendingTransactions.length;
+    this.totalTransactions += transactionsToMine.length;
+    // this.totalTransactions =
+    //   this.totalTransactions + this.pendingTransactions.length;
 
     this.pendingTransactions = [];
+    return newBlock;
   }
 
   // Add a new transaction to the list of pending transactions
@@ -108,10 +122,21 @@ class Blockchain {
       throw new Error("Not enough balance");
     }
 
-    console.log("addding to pending list", transaction.amount);
-
+    console.log("adding to transaction pool", transaction.amount);
+    this.transactionPool.push(transaction);
     this.pendingTransactions.push(transaction);
-    console.log("updated list ", this.pendingTransactions);
+    console.log("updated transaction pool ", this.transactionPool);
+  }
+
+  getTransactionsForNextBlock() {
+    const transactions = this.transactionPool.slice(
+      0,
+      this.transactionsPerBlock
+    );
+    this.transactionPool = this.transactionPool.slice(
+      this.transactionsPerBlock
+    );
+    return transactions;
   }
 
   // Get the balance of a particular address
