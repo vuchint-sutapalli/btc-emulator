@@ -58,7 +58,12 @@ class Blockchain {
 
   // Create the genesis block
   createGenesisBlock() {
-    const genBlock = new Block(0, Date.now(), [], "0");
+    const genBlock = new Block(
+      0,
+      Date.now(),
+      [],
+      new Array(64).fill(0).join("")
+    );
     console.log(`creating genesis block ${genBlock.hash}`);
 
     return genBlock;

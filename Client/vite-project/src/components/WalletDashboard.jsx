@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import BlockchainDashboard from "./DashBoard";
+import TransactionForm from "./TransactionForm";
 
 import useWalletAndBlockchainData from "../hooks/useWalletAndBlockchainData";
+import LatestBlockComponent from "./LatestBlock";
+import RecentBlocksPreview from "./RecentBlocksPreview";
+
+import BlockTrain from "./BlockTrain";
 
 const WalletAndDashboard = () => {
   const {
@@ -26,17 +31,25 @@ const WalletAndDashboard = () => {
   };
 
   if (!isInitialized) {
-    return <div>Initializing wallet and dashboard...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-gray-500 text-lg">
+          Initializing wallet and dashboard...
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
         Bitcoin-like Wallet and Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
+      <BlockTrain />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* <div>
           <h2 className="text-2xl font-bold mb-4">Wallet</h2>
           <form onSubmit={handleTransaction} className="space-y-4">
             <div>
@@ -85,9 +98,17 @@ const WalletAndDashboard = () => {
               </button>
             </p>
           )}
-        </div>
+        </div> */}
 
-        <div>
+        <TransactionForm
+          createTransaction={createTransaction}
+          message={message}
+          setMessage={setMessage}
+        />
+
+        <div className="col-span-2">
+          <LatestBlockComponent />
+          <RecentBlocksPreview />
           <BlockchainDashboard
             chainInfo={chainInfo}
             latestBlock={latestBlock}
