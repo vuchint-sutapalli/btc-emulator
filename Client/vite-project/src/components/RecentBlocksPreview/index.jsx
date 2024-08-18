@@ -10,15 +10,16 @@ import {
 import { Layers, Clock, Hash, Database } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./alert";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
-import useBlockChainData from "../../hooks/useBlockChainData";
+// import useBlockChainData from "../../hooks/useBlockChainData";
+import { useData } from "../../contexts/BlockChainContext";
 
 const RecentBlocks = () => {
-  const { recentBlocks } = useBlockChainData();
+  const { recentBlocks } = useData();
 
   if (!recentBlocks) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-md">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
       </div>
     );
   }
@@ -38,7 +39,7 @@ const RecentBlocks = () => {
   }));
 
   return (
-    <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+    <Card className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg">
       <CardHeader>
         <CardTitle className="text-3xl font-bold flex items-center">
           <Layers className="mr-2" /> Last 5 Blocks
@@ -52,8 +53,10 @@ const RecentBlocks = () => {
               <YAxis stroke="#fff" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  backgroundColor: "rgba(79, 70, 229, 0.8)",
                   border: "none",
+                  borderRadius: "4px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                 }}
                 labelStyle={{ color: "#fff" }}
               />
@@ -63,7 +66,10 @@ const RecentBlocks = () => {
         </div>
         <div className="space-y-4">
           {recentBlocks.map((block, index) => (
-            <Card key={block.hash} className="bg-white bg-opacity-20">
+            <Card
+              key={block.hash}
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-200"
+            >
               <CardContent className="p-4">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-lg font-semibold flex items-center">
@@ -74,10 +80,12 @@ const RecentBlocks = () => {
                     {new Date(block.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
-                <div className="text-sm truncate">
-                  <Hash className="inline mr-1" /> {block.hash}
+                <div className="text-sm truncate flex items-center">
+                  <Hash className="mr-1 flex-shrink-0" />
+
+                  <span className="truncate">{block.hash}</span>
                 </div>
-                <div className="mt-2 text-right">
+                <div className="mt-2 text-right font-semibold">
                   Transactions: {block.transactions.length}
                 </div>
               </CardContent>

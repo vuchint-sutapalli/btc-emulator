@@ -30,9 +30,12 @@ export class BlockchainService {
     return await response.json();
   }
 
-  async getLatestTransactions(count) {
-    // Implement this method when the backend supports it
-    return [];
+  async getTransactionPool() {
+    const response = await fetch(`${this.serverUrl}/api/transaction-pool`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch recent blocks");
+    }
+    return await response.json();
   }
 
   async createTransaction(transaction, signature) {

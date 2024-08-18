@@ -9,23 +9,27 @@ const useWalletOperations = () => {
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const initializeWallet = async () => {
-      try {
-        const newWallet = new Wallet();
-        await newWallet.generateKeyPair();
-        setWallet(newWallet);
-        setIsWalletInitialized(true);
-        setMessage("Wallet initialized successfully");
-        console.log("Wallet initialized successfully");
-      } catch (error) {
-        console.error("Error initializing wallet:", error);
-        setMessage(`Error initializing wallet: ${error.message}`);
-      }
-    };
+  const initializeWallet = async () => {
+    if (isWalletInitialized) return;
+    try {
+      console.log("creating a new wallet");
 
-    initializeWallet();
-  }, []);
+      const newWallet = new Wallet();
+      await newWallet.generateKeyPair();
+      setWallet(newWallet);
+      setIsWalletInitialized(true);
+      setMessage("Wallet initialized successfully");
+      console.log("Wallet initialized successfully");
+    } catch (error) {
+      console.error("Error initializing wallet:", error);
+      setMessage(`Error initializing wallet: ${error.message}`);
+    }
+  };
+
+  //   useEffect(() => {
+
+  //     // initializeWallet();
+  //   }, []);
 
   const createTransaction = async (toAddress, amount) => {
     if (!wallet) {
@@ -57,6 +61,7 @@ const useWalletOperations = () => {
     createTransaction,
     message,
     setMessage,
+    initializeWallet,
   };
 };
 

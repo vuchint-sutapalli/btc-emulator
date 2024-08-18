@@ -53,7 +53,7 @@ class Blockchain {
     this.pendingTransactions = [];
     this.totalTransactions = 0;
     this.transactionPool = [];
-    this.transactionsPerBlock = 5;
+    this.transactionsPerBlock = 2;
   }
 
   // Create the genesis block

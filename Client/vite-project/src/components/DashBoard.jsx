@@ -11,12 +11,14 @@ const BlockchainDashboard = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="text-center mt-8 text-gray-500">Loading dashboard...</div>
+      <div className="text-center mt-8 text-indigo-500">
+        Loading dashboard...
+      </div>
     );
   }
   if (!chainInfo) {
     return (
-      <div className="text-center mt-8 text-gray-500">
+      <div className="text-center mt-8 text-indigo-500">
         Unable to load blockchain information.
       </div>
     );
@@ -24,7 +26,7 @@ const BlockchainDashboard = ({
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+      <h2 className="text-2xl font-semibold text-indigo-900 mb-6">
         Blockchain Dashboard
       </h2>
 
@@ -82,26 +84,33 @@ const BlockchainDashboard = ({
       </div> */}
 
       <div className="mb-8">
-        <h3 className="text-xl font-bold mb-2">Latest Transactions</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
-            <thead>
+        <h3 className="text-xl font-bold mb-4 text-indigo-800">
+          Latest Transactions
+        </h3>
+        <div className="overflow-x-auto bg-indigo-50 rounded-lg">
+          <table className="min-w-full">
+            <thead className="bg-indigo-100">
               <tr>
-                <th className="px-4 py-2 text-left">From</th>
-                <th className="px-4 py-2 text-left">To</th>
-                <th className="px-4 py-2 text-left">Amount</th>
+                <th className="px-4 py-2 text-left text-indigo-700">From</th>
+                <th className="px-4 py-2 text-left  text-indigo-700">To</th>
+                <th className="px-4 py-2 text-left  text-indigo-700">Amount</th>
               </tr>
             </thead>
             <tbody>
               {latestTransactions.map((tx, index) => (
-                <tr key={index}>
-                  <td className="border px-4 py-2">
+                <tr
+                  key={index}
+                  className={index % 2 === 0 ? "bg-indigo-50" : "bg-white"}
+                >
+                  <td className="border-t border-indigo-200 px-4 py-2 text-indigo-800">
                     {tx.fromAddress.substring(0, 10)}...
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border-t border-indigo-200 px-4 py-2 text-indigo-800">
                     {tx.toAddress.substring(0, 10)}...
                   </td>
-                  <td className="border px-4 py-2">{tx.amount} BTC</td>
+                  <td className="border-t border-indigo-200 px-4 py-2 text-indigo-800">
+                    {tx.amount} BTC
+                  </td>
                 </tr>
               ))}
             </tbody>
