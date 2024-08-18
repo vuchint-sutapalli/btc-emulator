@@ -10,10 +10,10 @@ import {
 import { Layers, Clock, Hash, Database } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./alert";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
-import useWalletAndBlockchainData from "../../hooks/useWalletAndBlockchainData";
+import useBlockChainData from "../../hooks/useBlockChainData";
 
 const RecentBlocks = () => {
-  const { recentBlocks } = useWalletAndBlockchainData();
+  const { recentBlocks } = useBlockChainData();
 
   if (!recentBlocks) {
     return (

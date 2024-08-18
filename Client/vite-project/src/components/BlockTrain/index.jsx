@@ -1,10 +1,10 @@
 import React from "react";
 
 import Block from "./Block";
-import useWalletAndBlockchainData from "../../hooks/useWalletAndBlockchainData";
+import useBlockChainData from "../../hooks/useBlockChainData";
 
 const BlockTrain = () => {
-  const { recentBlocks } = useWalletAndBlockchainData();
+  const { recentBlocks } = useBlockChainData();
   // Handler for mining action
   const handleMine = (index, nonce) => {
     console.log(`Mining block at index: ${index} with nonce: ${nonce}`);

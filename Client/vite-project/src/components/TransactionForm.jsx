@@ -1,9 +1,28 @@
 // TransactionForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const TransactionForm = ({ createTransaction, message, setMessage }) => {
+const TransactionForm = ({ createTransaction, message, publicKey }) => {
   const [toAddress, setToAddress] = useState("");
   const [amount, setAmount] = useState("");
+  const [pubKeyString, setPubKeyString] = useState("");
+
+  useEffect(() => {
+    if (publicKey) {
+      const extractKey = async () => {
+        const exported = await window.crypto.subtle.exportKey(
+          "spki",
+          publicKey
+        );
+        const exportedAsString = String.fromCharCode.apply(
+          null,
+          new Uint8Array(exported)
+        );
+        setPubKeyString(exportedAsString);
+      };
+
+      extractKey();
+    }
+  }, [publicKey]);
 
   // In WalletAndDashboard component
   const handleTransaction = async (e) => {
@@ -38,42 +57,8 @@ const TransactionForm = ({ createTransaction, message, setMessage }) => {
   return (
     <div className="bg-white col-span-1 shadow-md rounded-lg p-6">
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Wallet</h2>
-      {/* <form onSubmit={handleTransaction} className="space-y-4">
-        <div>
-          <label htmlFor="toAddress" className="block mb-1">
-            To Address:
-          </label>
-          <input
-            type="text"
-            id="toAddress"
-            value={toAddress}
-            onChange={(e) => setToAddress(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="amount" className="block mb-1">
-            Amount:
-          </label>
-          <input
-            type="number"
-            id="amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-            min="0"
-            step="0.00000001"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Send Transaction
-        </button>
-      </form> */}
+      <div>{btoa(pubKeyString)}</div>
+
       <form onSubmit={handleTransaction} className="space-y-4">
         <div>
           <label

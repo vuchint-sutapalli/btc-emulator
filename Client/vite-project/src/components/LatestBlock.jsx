@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { ArrowDownCircle, Clock, Hash, Database } from "lucide-react";
 // import { Alert, AlertDescription, AlertTitle } from "";
 // import { Alert, AlertDescription, AlertTitle } from "./alert";
-import useWalletAndBlockchainData from "../hooks/useWalletAndBlockchainData";
+import useBlockChainData from "../hooks/useBlockChainData";
 
 const LatestBlockComponent = () => {
-  const { latestBlock } = useWalletAndBlockchainData();
+  const { latestBlock } = useBlockChainData();
   //   const [latestBlock, setLatestBlock] = useState(null);
   //   const [loading, setLoading] = useState(true);
   //   const [error, setError] = useState(null);

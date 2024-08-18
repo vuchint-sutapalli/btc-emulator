@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import BlockchainDashboard from "./DashBoard";
 import TransactionForm from "./TransactionForm";
 
-import useWalletAndBlockchainData from "../hooks/useWalletAndBlockchainData";
+import useBlockChainData from "../hooks/useBlockChainData";
+import useWallet from "../hooks/useWallet";
 import LatestBlockComponent from "./LatestBlock";
 import RecentBlocksPreview from "./RecentBlocksPreview";
 
@@ -15,22 +16,17 @@ const WalletAndDashboard = () => {
     latestBlock,
     recentBlocks,
     latestTransactions,
-    message,
+  } = useBlockChainData();
+
+  const {
+    isWalletInitialized,
     createTransaction,
-    setMessage,
-  } = useWalletAndBlockchainData();
+    message: walletMessage,
+    wallet,
+    setMessage: setWalletMessage,
+  } = useWallet();
 
-  const [toAddress, setToAddress] = useState("");
-  const [amount, setAmount] = useState("");
-
-  const handleTransaction = async (e) => {
-    e.preventDefault();
-    await createTransaction(toAddress, amount);
-    setToAddress("");
-    setAmount("");
-  };
-
-  if (!isInitialized) {
+  if (!isWalletInitialized) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <p className="text-gray-500 text-lg">
@@ -47,17 +43,16 @@ const WalletAndDashboard = () => {
       </h1>
 
       <BlockTrain />
+      <TransactionForm
+        createTransaction={createTransaction}
+        message={walletMessage}
+        setMessage={setWalletMessage}
+        publicKey={wallet?.publicKey}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <TransactionForm
-          createTransaction={createTransaction}
-          message={message}
-          setMessage={setMessage}
-        />
-
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="col-span-2">
           <LatestBlockComponent />
-          <RecentBlocksPreview />
           <BlockchainDashboard
             chainInfo={chainInfo}
             latestBlock={latestBlock}
@@ -65,6 +60,9 @@ const WalletAndDashboard = () => {
             latestTransactions={latestTransactions}
             isLoading={!isInitialized}
           />
+        </div>
+        <div className="col-span-2">
+          <RecentBlocksPreview />
         </div>
       </div>
     </div>
