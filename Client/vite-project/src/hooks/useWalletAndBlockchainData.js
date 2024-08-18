@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Frontend } from "../components/frontend.js";
 
+import { MAIN_SERVER } from "../../config.js";
+
 const useWalletAndBlockchainData = () => {
   const [frontend, setFrontend] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -13,7 +15,7 @@ const useWalletAndBlockchainData = () => {
   useEffect(() => {
     const initializeFrontend = async () => {
       try {
-        const newFrontend = new Frontend("http://localhost:3000");
+        const newFrontend = new Frontend(MAIN_SERVER);
         await newFrontend.initialize();
         setFrontend(newFrontend);
         setIsInitialized(true);

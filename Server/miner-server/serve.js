@@ -1,8 +1,15 @@
 const WebSocket = require("ws");
-const { Blockchain, Transaction, Block } = require("../main-server/blockChain");
-const { PORT, RECONNECT_INTERVAL, MINING_INTERVAL } = require("./config");
+const http = require("http");
 
-const port = PORT || process.argv[2] || 3001;
+const { Blockchain, Transaction, Block } = require("../main-server/blockChain");
+const {
+  PORT,
+  RECONNECT_INTERVAL,
+  MINING_INTERVAL,
+  CENTRAL_SERVER_URL,
+} = require("./config");
+
+const port = process.argv[2] || PORT || 3001;
 let ws;
 let isConnected = false;
 
@@ -10,7 +17,7 @@ let myCoin = new Blockchain(false);
 const minerAddress = "miner-wallet-address-" + port; // In a real scenario, this would be a proper wallet address
 
 function connectToServer() {
-  ws = new WebSocket(`ws://localhost:3000/miner/${port}`);
+  ws = new WebSocket(`${CENTRAL_SERVER_URL}/miner/${port}`);
 
   ws.on("open", () => {
     isConnected = true;
@@ -121,7 +128,14 @@ function startMining() {
 //   }, MINING_INTERVAL);
 // }
 
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("miner client is alive!\n");
+});
+
+server.listen(port, () => {
+  console.log(`HTTP server running on port ${port}`);
+});
+
 connectToServer();
 startMining();
-
-console.log(`Miner server running on port ${port}`);
