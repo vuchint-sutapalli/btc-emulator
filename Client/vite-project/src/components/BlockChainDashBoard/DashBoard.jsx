@@ -1,14 +1,7 @@
-import React from "react";
-
+/* eslint-disable react/prop-types */
 import StatCard from "./StatCard";
 
-const BlockchainDashboard = ({
-  chainInfo,
-  latestBlock,
-  recentBlocks,
-  latestTransactions,
-  isLoading,
-}) => {
+const BlockchainDashboard = ({ chainInfo, latestTransactions, isLoading }) => {
   if (isLoading) {
     return (
       <div className="text-center mt-8 text-indigo-500">
@@ -42,50 +35,9 @@ const BlockchainDashboard = ({
         />
       </div>
 
-      {/* <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">Latest Blocks</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left">Block #</th>
-                <th className="px-4 py-2 text-left">Hash</th>
-                <th className="px-4 py-2 text-left">Transactions</th>
-                <th className="px-4 py-2 text-left">Timestamp</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {recentBlocks.map((block) => {
-                if (!block) {
-                  return null;
-                }
-                return (
-                  <tr key={block.index}>
-                    <td className="border px-4 py-2">{block.index}</td>
-                    <td className="border px-4 py-2 relative group cursor-help">
-                      {block.hash.substring(0, 10)}...
-                      <span className="absolute left-0 -top-6 w-max p-2 text-xs text-white bg-black rounded hidden group-hover:block z-10">
-                        {block.hash}
-                      </span>
-                    </td>
-                    <td className="border px-4 py-2">
-                      {block.transactions.length}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {new Date(block.timestamp).toLocaleString()}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div> */}
-
       <div className="mb-8">
         <h3 className="text-xl font-bold mb-4 text-indigo-800">
-          Latest Transactions
+          Pending Transactions
         </h3>
         <div className="overflow-x-auto bg-indigo-50 rounded-lg">
           <table className="min-w-full">

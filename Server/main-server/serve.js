@@ -39,7 +39,7 @@ wss.on("connection", (ws, req) => {
     ws.on("message", (message) => {
       const data = JSON.parse(message);
       switch (data.type) {
-        case "NEW_BLOCK":
+        case "NEW_BLOCK": {
           console.log("Received new block in main:", data.block);
           const newBlock = new Block(
             data.block.index,
@@ -62,6 +62,7 @@ wss.on("connection", (ws, req) => {
             );
           }
           break;
+        }
         case "REQUEST_CHAIN":
           ws.send(
             JSON.stringify({

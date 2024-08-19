@@ -1,7 +1,6 @@
 import { useState } from "react";
 import * as bip39 from "bip39";
 import * as bitcoin from "bitcoinjs-lib";
-// import * as bip32 from "bip32";
 import { ECPairFactory } from "ecpair";
 
 import BIP32Factory from "bip32";
@@ -17,7 +16,7 @@ const ECPair = ECPairFactory(ecc);
 
 const useBitcoinWallet = () => {
   const [mnemonic, setMnemonic] = useState("");
-  const [address, setAddress] = useState("");
+  const [fromAddress, setFromAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [message, setMessage] = useState("");
 
@@ -50,7 +49,7 @@ const useBitcoinWallet = () => {
 
     // Set the derived keys and address
     setPrivateKey(privKey);
-    setAddress(address);
+    setFromAddress(address);
   };
   const signTransaction = async (transaction, privKeyWIF) => {
     // Private key in WIF format
@@ -91,7 +90,7 @@ const useBitcoinWallet = () => {
     try {
       const blockchainService = new BlockchainService(MAIN_SERVER);
       const transaction = {
-        fromAddress: address,
+        fromAddress: fromAddress,
         toAddress: toAddress,
         amount: parseFloat(amount),
       };
@@ -115,7 +114,7 @@ const useBitcoinWallet = () => {
 
   return {
     mnemonic,
-    address,
+    fromAddress,
     privateKey,
     generateWallet,
     createTransaction,

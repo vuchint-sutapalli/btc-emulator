@@ -1,21 +1,13 @@
-import React from "react";
-import BlockchainDashboard from "./DashBoard";
+import BlockchainDashboard from "./BlockChainDashBoard/DashBoard";
 
-// import useBlockChainData from "../hooks/useBlockChainData";
 import LatestBlockComponent from "./LatestBlock";
-import WalletComponent from "./wallet";
+import BitcoinWalletComponent from "./BitcoinWalletComponent";
 
 import BlockTrain from "./BlockTrain";
-import { useData } from "../contexts/BlockChainContext";
+import { useBlockChainData } from "../contexts/BlockChainContext";
 
 const WalletAndDashboard = () => {
-  const {
-    isInitialized,
-    chainInfo,
-    latestBlock,
-    recentBlocks,
-    latestTransactions,
-  } = useData();
+  const { isInitialized, chainInfo, latestTransactions } = useBlockChainData();
 
   if (!isInitialized) {
     return (
@@ -36,14 +28,12 @@ const WalletAndDashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="lg:col-span-1 space-y-8">
-            <WalletComponent />
+            <BitcoinWalletComponent />
           </div>
           <div className="lg:col-span-1">
             {/* <RecentBlocksPreview /> */}
             <BlockchainDashboard
               chainInfo={chainInfo}
-              latestBlock={latestBlock}
-              recentBlocks={recentBlocks}
               latestTransactions={latestTransactions}
               isLoading={!isInitialized}
             />

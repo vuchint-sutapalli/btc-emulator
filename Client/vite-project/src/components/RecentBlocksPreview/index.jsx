@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -8,13 +7,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Layers, Clock, Hash, Database } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "./alert";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
-// import useBlockChainData from "../../hooks/useBlockChainData";
-import { useData } from "../../contexts/BlockChainContext";
+import { useBlockChainData } from "../../contexts/BlockChainContext";
 
 const RecentBlocks = () => {
-  const { recentBlocks } = useData();
+  const { recentBlocks } = useBlockChainData();
 
   if (!recentBlocks) {
     return (
@@ -23,15 +20,6 @@ const RecentBlocks = () => {
       </div>
     );
   }
-
-  //   if (error) {
-  //     return (
-  //       <Alert variant="destructive">
-  //         <AlertTitle>Error</AlertTitle>
-  //         <AlertDescription>{error}</AlertDescription>
-  //       </Alert>
-  //     );
-  //   }
 
   const chartData = recentBlocks.map((block) => ({
     height: block.index,
@@ -65,7 +53,7 @@ const RecentBlocks = () => {
           </ResponsiveContainer>
         </div>
         <div className="space-y-4">
-          {recentBlocks.map((block, index) => (
+          {recentBlocks.map((block) => (
             <Card
               key={block.hash}
               className="bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-200"

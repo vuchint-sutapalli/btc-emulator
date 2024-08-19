@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from "react";
-import useBlockChainData from "../hooks/useBlockChainData"; // Path to your custom hook
+import { createContext, useContext } from "react";
+import useBlockChainHook from "../hooks/useBlockChainData"; // Path to your custom hook
 
 const BlockChainContext = createContext();
 
@@ -13,7 +13,7 @@ export const BlockChainProvider = ({ children }) => {
     message,
     setMessage,
     updateDashboard,
-  } = useBlockChainData(); // Example API and interval
+  } = useBlockChainHook(); // Example API and interval
 
   return (
     <BlockChainContext.Provider
@@ -33,6 +33,6 @@ export const BlockChainProvider = ({ children }) => {
   );
 };
 
-export const useData = () => {
+export const useBlockChainData = () => {
   return useContext(BlockChainContext);
 };

@@ -13,7 +13,7 @@ const port = process.argv[2] || PORT || 3001;
 let ws;
 let isConnected = false;
 
-let myCoin = new Blockchain(false);
+const minerChain = new Blockchain(false);
 const minerAddress = "miner-wallet-address-" + port; // In a real scenario, this would be a proper wallet address
 
 function connectToServer() {
@@ -46,7 +46,7 @@ function connectToServer() {
 
 function handleIncomingMessage(message) {
   switch (message.type) {
-    case "CHAIN_UPDATE":
+    case "CHAIN_UPDATE": {
       console.log("Received chain update from main", message.chain);
       const newChain = message.chain.map((blockData) => {
         const block = new Block(
@@ -60,14 +60,15 @@ function handleIncomingMessage(message) {
         return block;
       });
 
-      if (myCoin.replaceChain(newChain)) {
+      if (minerChain.replaceChain(newChain)) {
         console.log("Updated to new chain");
       } else {
         console.log("Chain update failed. Keeping the current chain.");
       }
       break;
+    }
 
-    case "NEW_TRANSACTION":
+    case "NEW_TRANSACTION": {
       console.log(
         "Received new transaction from main server:",
         message.transaction
@@ -78,11 +79,12 @@ function handleIncomingMessage(message) {
           message.transaction.toAddress,
           message.transaction.amount
         );
-        myCoin.addTransaction(newTransaction, true);
+        minerChain.addTransaction(newTransaction, true);
       } catch (error) {
         console.error("Error adding transaction by miner:", error.message);
       }
       break;
+    }
 
     default:
       console.log("Unknown message type:", message.type);
@@ -91,9 +93,9 @@ function handleIncomingMessage(message) {
 
 function startMining() {
   setInterval(() => {
-    if (myCoin.transactionPool.length >= myCoin.transactionsPerBlock) {
+    if (minerChain.transactionPool.length >= minerChain.transactionsPerBlock) {
       console.log("Mining new block...");
-      const minedBlock = myCoin.minePendingTransactions(minerAddress);
+      const minedBlock = minerChain.minePendingTransactions(minerAddress);
       if (minedBlock && isConnected) {
         ws.send(JSON.stringify({ type: "NEW_BLOCK", block: minedBlock }));
         console.log("Mined and broadcasted new block:", minedBlock);
@@ -104,29 +106,11 @@ function startMining() {
       }
     } else {
       console.log(
-        `Waiting for more transactions. Current pool size: ${myCoin.transactionPool.length}`
+        `Waiting for more transactions. Current pool size: ${minerChain.transactionPool.length}`
       );
     }
   }, MINING_INTERVAL);
 }
-
-// function startMining() {
-//   setInterval(() => {
-//     if (myCoin.pendingTransactions.length > 0) {
-//       console.log("Mining new block...");
-//       myCoin.y(minerAddress);
-//       const latestBlock = myCoin.getLatestBlock();
-//       if (isConnected) {
-//         ws.send(JSON.stringify({ type: "NEW_BLOCK", block: latestBlock }));
-//         console.log("Mined and broadcasted new block:", latestBlock);
-//       } else {
-//         console.log("Cannot broadcast block - not connected to server");
-//       }
-//     } else {
-//       console.log("No pending transactions to mine");
-//     }
-//   }, MINING_INTERVAL);
-// }
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });

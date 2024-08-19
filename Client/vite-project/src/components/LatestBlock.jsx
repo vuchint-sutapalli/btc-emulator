@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
 import { ArrowDownCircle, Clock, Hash, Database } from "lucide-react";
-import { useData } from "../contexts/BlockChainContext";
-
-// import useBlockChainData from "../hooks/useBlockChainData";
+import { useBlockChainData } from "../contexts/BlockChainContext";
 
 const LatestBlockComponent = () => {
-  const { latestBlock } = useData();
+  const { latestBlock } = useBlockChainData();
 
   if (!latestBlock) {
     return (

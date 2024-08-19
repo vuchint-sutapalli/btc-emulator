@@ -98,7 +98,7 @@ class Blockchain {
     );
     newBlock.mineBlock(this.difficulty);
 
-    console.log(`Block successfully mined!`);
+    console.log("Block successfully mined!");
     this.chain.push(newBlock);
     this.totalTransactions += transactionsToMine.length;
     // this.totalTransactions =
@@ -200,10 +200,10 @@ class Blockchain {
   }
 
   addBlock(newBlock) {
-    let latBlock = this.getLatestBlock();
+    const lBlock = this.getLatestBlock();
     console.log("main server trying to add block", newBlock);
 
-    if (this.isValidNewBlock(newBlock, latBlock)) {
+    if (this.isValidNewBlock(newBlock, lBlock)) {
       this.chain.push(newBlock);
       console.log("Block successfully added to the blockchain.");
       return true;
