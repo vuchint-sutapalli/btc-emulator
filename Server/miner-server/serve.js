@@ -1,13 +1,13 @@
 const WebSocket = require("ws");
 const http = require("http");
-
-const { Blockchain, Transaction, Block } = require("../main-server/blockChain");
 const {
   PORT,
   RECONNECT_INTERVAL,
   MINING_INTERVAL,
   CENTRAL_SERVER_URL,
 } = require("./config");
+
+const { Blockchain, Transaction, Block } = require("./blockChain");
 
 const port = process.argv[2] || PORT || 3001;
 let ws;
