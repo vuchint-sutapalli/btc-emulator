@@ -86,6 +86,22 @@ function handleIncomingMessage(message) {
       break;
     }
 
+    case "PENDING_TRANSACTIONS":
+      console.log("Received pending transactions");
+      message.transactions.forEach((tx) => {
+        try {
+          const newTransaction = new Transaction(
+            tx.fromAddress,
+            tx.toAddress,
+            tx.amount
+          );
+          minerChain.addTransaction(newTransaction, true);
+        } catch (error) {
+          console.error("Error adding pending transaction:", error.message);
+        }
+      });
+      break;
+
     default:
       console.log("Unknown message type:", message.type);
   }
