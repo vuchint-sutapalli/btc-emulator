@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@bitauth/libauth": "^3.0.0",
     "@heroicons/react": "^2.1.5",
     "axios": "^1.7.4",
     "bip32": "^4.0.0",
