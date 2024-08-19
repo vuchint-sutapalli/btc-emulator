@@ -33,7 +33,7 @@ const BlockchainDashboard = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard title="Total Blocks" value={chainInfo.totalBlocks} />
         <StatCard
-          title="Total Transactions"
+          title="Total Confirmed Transactions"
           value={chainInfo.totalTransactions}
         />
         <StatCard

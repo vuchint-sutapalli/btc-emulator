@@ -1,4 +1,6 @@
 const express = require("express");
+const crypto = require("crypto");
+
 const http = require("http");
 const cors = require("cors");
 const { PORT } = require("./config");
@@ -50,6 +52,7 @@ wss.on("connection", (ws, req) => {
 
           if (mainChain.addBlock(newBlock)) {
             console.log("broadcast about new block from here");
+            removeConfirmedTransactions(newBlock.transactions);
 
             broadcastToMiners(
               JSON.stringify({
@@ -76,6 +79,24 @@ wss.on("connection", (ws, req) => {
     });
   }
 });
+
+function hashTransaction(transaction) {
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(transaction))
+    .digest("hex");
+}
+
+function removeConfirmedTransactions(transactions) {
+  const confirmedHashes = transactions.map(hashTransaction);
+  if (confirmedHashes.length) {
+    mainChain.transactionPool = mainChain.transactionPool.filter(
+      (tx) => !confirmedHashes.includes(hashTransaction(tx))
+    );
+    mainChain.totalTransactions =
+      mainChain.totalTransactions + transactions.length;
+  }
+}
 
 function broadcastToMiners(message) {
   console.log(`Broadcasting message to miners: ${message}`);

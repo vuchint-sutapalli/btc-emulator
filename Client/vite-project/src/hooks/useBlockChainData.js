@@ -1,6 +1,4 @@
-// useBlockchainData.js
 import { useState, useEffect, useRef, useCallback } from "react";
-// import { BlockchainService } from "./blockchainService";
 import { BlockchainService } from "../lib/helpers/blockChain";
 import { MAIN_SERVER } from "../../config.js";
 
@@ -63,28 +61,6 @@ const useBlockchainData = () => {
       }
     };
   }, [blockchainService, updateDashboard]);
-
-  //   useEffect(() => {
-  //     if (!blockchainService) return;
-
-  //     const interval = setInterval(
-  //       () => updateDashboard(blockchainService),
-  //       10000
-  //     );
-  //     return () => clearInterval(interval);
-  //   }, [blockchainService]);
-
-  //   const updateDashboard = async (service) => {
-  //     try {
-  //       setChainInfo(await service.getChainInfo());
-  //       setLatestBlock(await service.getLatestBlock());
-  //       setRecentBlocks(await service.getRecentBlocks());
-  //       setLatestTransactions(await service.getTransactionPool());
-  //     } catch (error) {
-  //       console.error("Error updating dashboard:", error);
-  //       setMessage(`Error updating dashboard: ${error.message}`);
-  //     }
-  //   };
 
   return {
     isInitialized,

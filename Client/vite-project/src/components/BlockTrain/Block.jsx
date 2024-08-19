@@ -1,15 +1,7 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
 import moment from "moment"; // For formatting time ago
 
-const Block = ({ block, onMine }) => {
-  // State for tracking nonce values of each block
-  const [nonce, setNonce] = useState(block.nonce);
-
-  // Handler for changing nonce value
-  const handleNonceChange = (e) => {
-    setNonce(e.target.value);
-  };
-
+const Block = ({ block }) => {
   return (
     <div
       data-block-number={`Block ${block.index}`}
@@ -17,13 +9,8 @@ const Block = ({ block, onMine }) => {
     >
       <div className="flex flex-col space-y-4">
         <div className="text-sm font-semibold">
-          <strong>Nonce:</strong>
-          <input
-            type="number"
-            value={nonce}
-            onChange={handleNonceChange}
-            className="ml-2 bg-white text-indigo-900 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-          />
+          <strong>Nonce: </strong>
+          {block.nonce}
         </div>
         <div className="text-sm font-semibold">
           <strong>Transactions:</strong> {block.transactions.length}
@@ -49,12 +36,6 @@ const Block = ({ block, onMine }) => {
             {block.previousHash}
           </div>
         </div>
-        <button
-          onClick={() => onMine(index, nonce)}
-          className="mt-3 bg-[#B4D421] text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-800 transition-colors duration-200"
-        >
-          Mine
-        </button>
       </div>
     </div>
   );
