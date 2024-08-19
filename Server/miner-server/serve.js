@@ -9,7 +9,7 @@ const {
 
 const { Blockchain, Transaction, Block } = require("./blockChain");
 
-const port = process.argv[2] || PORT || 3001;
+const port = PORT || 3001;
 let ws;
 let isConnected = false;
 
